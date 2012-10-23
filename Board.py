@@ -50,10 +50,20 @@ class Board:
             self.grid[x][y] = 'X'
 
     def display(self):
+        print("    [1] [2] [3] [4] [5] [6] [7] [8]\n")
         for index, column in enumerate(self.grid):
-            current_line = ""
+            current_line = "[%s] " % str(index+1)
             for cell in column:
                 current_line += "["+cell+"] "
             print(current_line)
             if (index < 7):
                 print("") # skip a lin e
+
+    def valid_move(self, player, x, y):
+        """ Returns true if the player is allowed to make move
+
+        e.g, if valid_move("O", 3, 2):
+            do_move
+
+        """
+        return True
