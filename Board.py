@@ -84,20 +84,26 @@ class Board:
         adjacent_pieces = []
         valid_move = False
 
+        # get the combinations of directions (-1,-1), (-1,0), etc.
         for i in range(-1,2):
             for j in range(-1,2):
                 if (i == 0 and j == 0):
                     pass # don't check the piece itself
                 if x+i < 9 and y+j < 9 and x+i > 0 and y+i > 0:
+                    # make sure we're not looking at a border
                     piece = self.get_piece(x+i, y+j)
                     if piece != player and piece != "B":
-                        c_x = x+i
-                        c_y = y+j
+                        # if the adjacaent piece is an opponent piece
+                        c_x = x + i
+                        c_y = y + j
                         while c_x < 9 and c_y < 9 and c_x > 0 and c_y > 0:
+                            # check each direction using i,j from 
+                            # origin x,y until you reach a border
                             if (self.get_piece(c_x, c_y) == player):
+                                # the move was valid, now we flip pieces
                                 valid_move = True
-                                f_x = c_x + i
-                                f_y = c_y + j
+                                # f_x and f_y is for tracking which piece to flip
+                                f_x, f_y = c_x - i, c_y - j
                                 while self.get_piece(f_x, f_y) != player:
                                     print("flipping %d, %d" % (f_x, f_y))
                                     self.flip_piece(f_x, f_y)
