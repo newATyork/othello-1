@@ -20,7 +20,7 @@ def main():
 
 def get_input():
     print("Give me your input in x,y format (e.g, 5,2): ")
-    x,y = raw_input().split(",")
+    x,y = input().split(",")
     return x,y
 
 if __name__ == '__main__':
