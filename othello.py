@@ -1,4 +1,5 @@
 from Board import Board
+import re
 
 def main():
     b = Board()
@@ -38,8 +39,11 @@ def main():
                         print("White has no more moves.")
 
 def get_input():
-    print("Give me your input in x,y format (e.g, 5,2): ")
-    x,y = input().split(",")
+    choice = ""
+    while not re.match("^[0-8],[0-8]$", choice):
+        print("Give me your input in x,y format (e.g, 5,2): ")
+        choice = input()
+    x,y = choice.split(",")
     return x,y
 
 if __name__ == '__main__':
