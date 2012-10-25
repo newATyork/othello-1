@@ -17,14 +17,14 @@ class Board:
     """
     def __init__(self):
         self.grid = [
-            ['B','B','B','B','B','B','B','B',],
-            ['B','B','B','B','B','B','B','B',],
-            ['B','B','B','B','B','B','B','B',],
-            ['B','B','B','O','X','B','B','B',],
-            ['B','B','B','X','O','B','B','B',],
-            ['B','B','B','B','B','B','B','B',],
-            ['B','B','B','B','B','B','B','B',],
-            ['B','B','B','B','B','B','B','B',],
+            ['_','_','_','_','_','_','_','_',],
+            ['_','_','_','_','_','_','_','_',],
+            ['_','_','_','_','_','_','_','_',],
+            ['_','_','_','O','X','_','_','_',],
+            ['_','_','_','X','O','_','_','_',],
+            ['_','_','_','_','_','_','_','_',],
+            ['_','_','_','_','_','_','_','_',],
+            ['_','_','_','_','_','_','_','_',],
         ]
 
     def flip_piece(self, y, x):
@@ -36,13 +36,13 @@ class Board:
             self.grid[x][y] = 'O'
         elif (self.grid[x][y] == 'O'):
             self.grid[x][y] = 'X'
-        elif (self.grid[x][y] == 'B'):
+        elif (self.grid[x][y] == '_'):
             raise Exception("Trying to flip empty piece (%d, %d)." % (visual_x, visual_y))
 
     def insert_white(self, y, x):
         x -= 1
         y -= 1
-        if (self.grid[x][y] != 'B'):
+        if (self.grid[x][y] != '_'):
             raise Exception
         else:
             self.grid[x][y] = 'O'
@@ -50,7 +50,7 @@ class Board:
     def insert_black(self, y, x):
         x -= 1
         y -= 1
-        if (self.grid[x][y] != 'B'):
+        if (self.grid[x][y] != '_'):
             raise Exception
         else:
             self.grid[x][y] = 'X'
@@ -84,7 +84,7 @@ class Board:
         """
         valid_move = False
 
-        if (self.get_piece(x, y) != "B"):
+        if (self.get_piece(x, y) != "_"):
             return False
 
         # get the combinations of directions (-1,-1), (-1,0), etc as i,j.
@@ -95,7 +95,7 @@ class Board:
                 if x+i < 9 and y+j < 9 and x+i > 0 and y+i > 0:
                     # make sure we're not looking at a border
                     piece = self.get_piece(x+i, y+j)
-                    if piece != player and piece != "B":
+                    if piece != player and piece != "_":
                         # if the adjacaent piece is an opponent piece
                         c_x = x + i
                         c_y = y + j
@@ -125,7 +125,7 @@ class Board:
         be rewritten for efficiency.
         
         """
-        if (self.get_piece(x, y) != "B"):
+        if (self.get_piece(x, y) != "_"):
             return False
         
         # get the combinations of directions (-1,-1), (-1,0), etc as i,j.
@@ -136,7 +136,7 @@ class Board:
                 if x+i < 9 and y+j < 9 and x+i > 0 and y+i > 0:
                     # make sure we're not looking at a border
                     piece = self.get_piece(x+i, y+j)
-                    if piece != player and piece != "B":
+                    if piece != player and piece != "_":
                         # if the adjacaent piece is an opponent piece
                         c_x = x + i
                         c_y = y + j
