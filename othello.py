@@ -42,7 +42,7 @@ def get_input():
     choice = ""
     while not re.match("^[0-8],[0-8]$", choice):
         print("Give me your input in x,y format (e.g, 5,2): ")
-        choice = input()
+        choice = raw_input()
     x,y = choice.split(",")
     return x,y
 
