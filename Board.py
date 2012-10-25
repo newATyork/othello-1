@@ -56,11 +56,13 @@ class Board:
             self.grid[x][y] = 'X'
 
     def get_piece(self, y, x):
+        """ Returns the piece at the given location. Provide x,y """
         x -= 1
         y -= 1
         return self.grid[x][y]
 
     def display(self):
+        """ Displays the board state as ASCII """
         print("    [1] [2] [3] [4] [5] [6] [7] [8]\n")
         for index, column in enumerate(self.grid):
             current_line = "[%s] " % str(index+1)
@@ -68,7 +70,7 @@ class Board:
                 current_line += "["+cell+"] "
             print(current_line)
             if (index < 7):
-                print("") # skip a lin e
+                print("") # skip a line
 
     def make_move(self, player, x, y):
         """ Alters the board if move is valid.
@@ -80,11 +82,12 @@ class Board:
             # continue game
 
         """
-        # find adjacent pieces of opposite color
-        adjacent_pieces = []
         valid_move = False
 
-        # get the combinations of directions (-1,-1), (-1,0), etc.
+        if (self.get_piece(x, y) != "B"):
+            return False
+
+        # get the combinations of directions (-1,-1), (-1,0), etc as i,j.
         for i in range(-1,2):
             for j in range(-1,2):
                 if (i == 0 and j == 0):
@@ -104,12 +107,53 @@ class Board:
                                 valid_move = True
                                 # f_x and f_y is for tracking which piece to flip
                                 f_x, f_y = c_x - i, c_y - j
-                                while self.get_piece(f_x, f_y) != player:
+                                opposite_player = 'X' if player=='O' else 'O'
+                                while self.get_piece(f_x, f_y) == opposite_player:
                                     print("flipping %d, %d" % (f_x, f_y))
                                     self.flip_piece(f_x, f_y)
-                                    f_x += i
-                                    f_y += j
+                                    f_x -= i
+                                    f_y -= j
                             c_x += i
                             c_y += j
 
         return valid_move
+
+    def move_is_valid(self, player, x, y):
+        """ Returns True if move is valid. 
+        
+        This function is mostly ripped from make_move() and could
+        be rewritten for efficiency.
+        
+        """
+        if (self.get_piece(x, y) != "B"):
+            return False
+        
+        # get the combinations of directions (-1,-1), (-1,0), etc as i,j.
+        for i in range(-1,2):
+            for j in range(-1,2):
+                if (i == 0 and j == 0):
+                    pass # don't check the piece itself
+                if x+i < 9 and y+j < 9 and x+i > 0 and y+i > 0:
+                    # make sure we're not looking at a border
+                    piece = self.get_piece(x+i, y+j)
+                    if piece != player and piece != "B":
+                        # if the adjacaent piece is an opponent piece
+                        c_x = x + i
+                        c_y = y + j
+                        while c_x < 9 and c_y < 9 and c_x > 0 and c_y > 0:
+                            # check each direction using i,j from 
+                            # origin x,y until you reach a border
+                            if (self.get_piece(c_x, c_y) == player):
+                                # the move was valid, now we flip pieces
+                                return True
+                            c_x += i
+                            c_y += j
+
+        return False
+
+    def has_valid_move(self, player):
+        for x in range(1,9):
+            for y in range(1,9):
+                if self.move_is_valid(player, x, y):
+                    return True
+        return False
