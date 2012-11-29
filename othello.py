@@ -6,7 +6,6 @@ import sys
 import time
 
 def main():
-    b = Board()
     game_over = False
     player_turn = "O"
 
@@ -20,11 +19,16 @@ def main():
     black_piece = pygame.image.load("black_piece.png")
     player_1 = pygame.image.load("1_player.png")
     player_2 = pygame.image.load("2_player.png")
+    hint = pygame.image.load("hint.png")
     box = pygame.image.load("box.png")
     current_mode_selected = 1
 
+    x_begin = 245
+    y_begin = 160
+    x_increase = 42
+    y_increase = 41.5
     # choosing player mode menu
-    while True:
+    while not mode_chosen:
         # exit on exit button
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -34,6 +38,8 @@ def main():
         if pygame.key.get_pressed()[pygame.K_RETURN]:
             print("mode " + str(current_mode_selected) + " selected")
             time.sleep(.1)
+            mode_chosen = True
+            continue
             
         if pygame.key.get_pressed()[pygame.K_RIGHT]:
             current_mode_selected = 2
@@ -46,14 +52,12 @@ def main():
         screen.blit(background, (0, 0, 800, 600))
         # x_increase and y_increase used to determined location of pieces
         # dat guess n' check [b'-']b
-        x_increase = 42
-        y_increase = 41.5
         for x in range(8):
             for y in range(8):
                 if (random.random() < .5):
-                    screen.blit(black_piece, (245+x_increase*x, 160+y_increase*y, 40, 40))
+                    screen.blit(black_piece, (x_begin+x_increase*x, y_begin+y_increase*y, 40, 40))
                 else:
-                    screen.blit(white_piece, (245+x_increase*x, 160+y_increase*y, 40, 40))
+                    screen.blit(white_piece, (x_begin+x_increase*x, y_begin+y_increase*y, 40, 40))
 
         if (current_mode_selected == 1):
             screen.blit(box, (90, 5))
@@ -64,6 +68,38 @@ def main():
         screen.blit(player_2, (450, 10))
                 
         pygame.display.flip()
+
+    # 2 player mode
+    if (current_mode_selected == 2):
+        b = Board()
+        game_over = False
+        # "O" is white "X" is black
+        player_turn = "O"
+        
+        while not game_over:
+            screen.blit(background, (0, 0, 800, 600))
+
+            for x in range(1,9):
+                for y in range(1,9):
+                    if b.get_piece(x, y) == "X":
+                        screen.blit(black_piece, (x_begin+x_increase*(x-1), y_begin+y_increase*(y-1), 40, 40))
+                    if b.get_piece(x, y) == "O":
+                        screen.blit(white_piece, (x_begin+x_increase*(x-1), y_begin+y_increase*(y-1), 40, 40))
+                    if b.move_is_valid(player_turn, x, y):
+                        screen.blit(hint, (x_begin+x_increase*(x-1), y_begin+y_increase*(y-1), 40, 40))
+
+            # get click input
+            if pygame.mouse.get_pressed()[0]:
+                print('wtf')
+                x = pygame.mouse.get_pos()[0]
+                y = pygame.mouse.get_pos()[1]
+                x -= x_start
+                x /= x_increase
+                y -= y_start
+                y /= y_increase
+                print("click: " + str(x) + " " + str(y))
+
+            pygame.display.flip()
 
     """
         if move_made: # in case of invalid move
