@@ -91,17 +91,19 @@ class Board:
         for i in range(-1,2):
             for j in range(-1,2):
                 if (i == 0 and j == 0):
-                    pass # don't check the piece itself
+                    continue # don't check the piece itself
                 if x+i < 9 and y+j < 9 and x+i > 0 and y+i > 0:
                     # make sure we're not looking at a border
                     piece = self.get_piece(x+i, y+j)
                     if piece != player and piece != "_":
-                        # if the adjacaent piece is an opponent piece
+                        # if the adjacent piece is an opponent piece
                         c_x = x + i
                         c_y = y + j
                         while c_x < 9 and c_y < 9 and c_x > 0 and c_y > 0:
                             # check each direction using i,j from 
                             # origin x,y until you reach a border
+                            if (self.get_piece(c_x, c_y) == "_"):
+                                break # found an empty before the other color
                             if (self.get_piece(c_x, c_y) == player):
                                 # the move was valid, now we flip pieces
                                 valid_move = True
@@ -132,7 +134,7 @@ class Board:
         for i in range(-1,2):
             for j in range(-1,2):
                 if (i == 0 and j == 0):
-                    pass # don't check the piece itself
+                    continue # don't check the piece itself
                 if x+i < 9 and y+j < 9 and x+i > 0 and y+i > 0:
                     # make sure we're not looking at a border
                     piece = self.get_piece(x+i, y+j)
@@ -143,6 +145,8 @@ class Board:
                         while c_x < 9 and c_y < 9 and c_x > 0 and c_y > 0:
                             # check each direction using i,j from 
                             # origin x,y until you reach a border
+                            if (self.get_piece(c_x, c_y) == "_"):
+                                break # found an empty before the other color
                             if (self.get_piece(c_x, c_y) == player):
                                 # the move was valid, now we flip pieces
                                 return True
@@ -157,3 +161,19 @@ class Board:
                 if self.move_is_valid(player, x, y):
                     return True
         return False
+
+    def get_winning(self):
+        num_white = 0
+        num_black = 0
+        for x in range(1,9):
+            for y in range(1,9):
+                if self.get_piece(x, y) == "O":
+                    num_white += 1
+                elif self.get_piece(x,y) == "X":
+                    num_black += 1
+        if (num_white > num_black):
+            return "O"
+        elif (num_white < num_black):
+            return "X"
+        else:
+            return "tie"

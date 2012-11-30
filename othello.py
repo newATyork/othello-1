@@ -99,10 +99,12 @@ def main():
                         b.insert_black(x,y)
                     else:
                         b.insert_white(x,y)
-                    if player_turn == "X":
+                    if player_turn == "X" and b.has_valid_move("O"):
                         player_turn = "O"
-                    else:
+                    elif player_turn == "O" and b.has_valid_move("X"):
                         player_turn = "X"
+                    else:
+                        print b.get_winning()
 
             screen.blit(background, (0, 0, 800, 600))
 
