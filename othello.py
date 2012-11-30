@@ -10,10 +10,9 @@ def main():
     player_turn = "O"
 
     pygame.init()
-    screen = pygame.display.set_mode((800,600))
+    screen = pygame.display.set_mode((800, 600))
     
     mode_chosen = False
-    splash_screen = pygame.image.load("panda.jpg")
     background = pygame.image.load("board.jpg")
     white_piece = pygame.image.load("white_piece.png")
     black_piece = pygame.image.load("black_piece.png")
@@ -71,12 +70,40 @@ def main():
 
     # 2 player mode
     if (current_mode_selected == 2):
+        # exit on exit button
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
         b = Board()
         game_over = False
         # "O" is white "X" is black
-        player_turn = "O"
+        player_turn = "X"
         
         while not game_over:
+            # exit on exit button
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+            if pygame.mouse.get_pressed()[0]:
+                x = pygame.mouse.get_pos()[0]
+                y = pygame.mouse.get_pos()[1]
+                x -= x_begin
+                x /= x_increase
+                y -= y_begin
+                y /= y_increase
+                x, y = int(x+1), int(y+1)
+                if (b.move_is_valid(player_turn, x, y)):
+                    b.make_move(player_turn, x, y)
+                    if (player_turn == "X"):
+                        b.insert_black(x,y)
+                    else:
+                        b.insert_white(x,y)
+                    if player_turn == "X":
+                        player_turn = "O"
+                    else:
+                        player_turn = "X"
+
             screen.blit(background, (0, 0, 800, 600))
 
             for x in range(1,9):
@@ -87,17 +114,6 @@ def main():
                         screen.blit(white_piece, (x_begin+x_increase*(x-1), y_begin+y_increase*(y-1), 40, 40))
                     if b.move_is_valid(player_turn, x, y):
                         screen.blit(hint, (x_begin+x_increase*(x-1), y_begin+y_increase*(y-1), 40, 40))
-
-            # get click input
-            if pygame.mouse.get_pressed()[0]:
-                print('wtf')
-                x = pygame.mouse.get_pos()[0]
-                y = pygame.mouse.get_pos()[1]
-                x -= x_start
-                x /= x_increase
-                y -= y_start
-                y /= y_increase
-                print("click: " + str(x) + " " + str(y))
 
             pygame.display.flip()
 
