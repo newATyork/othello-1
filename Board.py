@@ -111,7 +111,6 @@ class Board:
                                 f_x, f_y = c_x - i, c_y - j
                                 opposite_player = 'X' if player=='O' else 'O'
                                 while self.get_piece(f_x, f_y) == opposite_player:
-                                    print("flipping %d, %d" % (f_x, f_y))
                                     self.flip_piece(f_x, f_y)
                                     f_x -= i
                                     f_y -= j
